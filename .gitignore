@@ -1,0 +1,9 @@
+# Ignore all files in the data, images, and music folders
+/docker/data/*
+/docker/images/*
+/docker/music/*
+
+# But not README.md files
+!/docker/data/README.md
+!/docker/images/README.md
+!/docker/music/README.md
