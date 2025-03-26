@@ -1,0 +1,234 @@
+services:
+  tg-db:
+    container_name: ${POSTGRES_HOST}
+    image: postgres:17-alpine
+    restart: unless-stopped
+    ports:
+      - ${POSTGRES_LOCAL_PORT}:${POSTGRES_PORT}
+    volumes:
+      - ./data/tg-db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d tg -U postgres" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  users-service:
+    image: ghcr.io/w1ngshot/trashgrounds-user:1.0.0
+    container_name: ${USER_SERVICE_HOST}
+    restart: unless-stopped
+    ports:
+      - ${USER_SERVICE_HTTP_LOCAL_PORT}:${USER_SERVICE_HTTP_PORT}
+      - ${USER_SERVICE_HTTP2_LOCAL_PORT}:${USER_SERVICE_HTTP2_PORT}
+    depends_on:
+      tg-db:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:${USER_SERVICE_HTTP_PORT};http://+:${USER_SERVICE_HTTP2_PORT}
+      ASPNETCORE_Kestrel__Endpoints__Http__Url: http://+:${USER_SERVICE_HTTP_PORT}
+      ASPNETCORE_Kestrel__Endpoints__Http__Protocols: Http1AndHttp2
+      ASPNETCORE_Kestrel__Endpoints__Http2__Url: http://+:${USER_SERVICE_HTTP2_PORT}
+      ASPNETCORE_Kestrel__Endpoints__Http2__Protocols: Http2
+      Database__Host: ${POSTGRES_HOST}
+      Database__Port: ${POSTGRES_PORT}
+      Database__Database: ${POSTGRES_DB}
+      Database__Username: ${POSTGRES_USER}
+      Database__Password: ${POSTGRES_PASSWORD}
+      Database__Schema: ${USER_DATABASE_SCHEMA}
+      Jwt__Key: ${JWT_KEY}
+      Microservices__File: http://${FILE_SERVICE_HOST}:${FILE_SERVICE_HTTP2_PORT}
+      ElasticConfiguration__Uri: http://${ELASTIC_HOST}:${ELASTIC_HTTP_PORT}
+
+  tracks-service:
+    image: ghcr.io/w1ngshot/trashgrounds-track:1.0.0
+    container_name: ${TRACK_SERVICE_HOST}
+    restart: unless-stopped
+    ports:
+      - ${TRACK_SERVICE_HTTP_LOCAL_PORT}:${TRACK_SERVICE_HTTP_PORT}
+      - ${TRACK_SERVICE_HTTP2_LOCAL_PORT}:${TRACK_SERVICE_HTTP2_PORT}
+    depends_on:
+      tg-db:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:${TRACK_SERVICE_HTTP_PORT};http://+:${TRACK_SERVICE_HTTP2_PORT}
+      ASPNETCORE_Kestrel__Endpoints__Http__Url: http://+:${TRACK_SERVICE_HTTP_PORT}
+      ASPNETCORE_Kestrel__Endpoints__Http__Protocols: Http1AndHttp2
+      ASPNETCORE_Kestrel__Endpoints__Http2__Url: http://+:${TRACK_SERVICE_HTTP2_PORT}
+      ASPNETCORE_Kestrel__Endpoints__Http2__Protocols: Http2
+      Database__Host: ${POSTGRES_HOST}
+      Database__Port: ${POSTGRES_PORT}
+      Database__Database: ${POSTGRES_DB}
+      Database__Username: ${POSTGRES_USER}
+      Database__Password: ${POSTGRES_PASSWORD}
+      Database__Schema: ${TRACK_DATABASE_SCHEMA}
+      Jwt__Key: ${JWT_KEY}
+      Microservices__User: http://${USER_SERVICE_HOST}:${USER_SERVICE_HTTP2_PORT}
+      Microservices__Rate: http://${RATE_SERVICE_HOST}:${RATE_SERVICE_HTTP2_PORT}
+      Microservices__File: http://${FILE_SERVICE_HOST}:${FILE_SERVICE_HTTP2_PORT}
+      ElasticConfiguration__Uri: http://${ELASTIC_HOST}:${ELASTIC_HTTP_PORT}
+
+  rates-service:
+    image: ghcr.io/w1ngshot/trashgrounds-rate:1.0.0
+    container_name: ${RATE_SERVICE_HOST}
+    restart: unless-stopped
+    ports:
+      - ${RATE_SERVICE_HTTP_LOCAL_PORT}:${RATE_SERVICE_HTTP_PORT}
+      - ${RATE_SERVICE_HTTP2_LOCAL_PORT}:${RATE_SERVICE_HTTP2_PORT}
+    depends_on:
+      tg-db:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:${RATE_SERVICE_HTTP_PORT};http://+:${RATE_SERVICE_HTTP2_PORT}
+      ASPNETCORE_Kestrel__Endpoints__Http__Url: http://+:${RATE_SERVICE_HTTP_PORT}
+      ASPNETCORE_Kestrel__Endpoints__Http__Protocols: Http1AndHttp2
+      ASPNETCORE_Kestrel__Endpoints__Http2__Url: http://+:${RATE_SERVICE_HTTP2_PORT}
+      ASPNETCORE_Kestrel__Endpoints__Http2__Protocols: Http2
+      Database__Host: ${POSTGRES_HOST}
+      Database__Port: ${POSTGRES_PORT}
+      Database__Database: ${POSTGRES_DB}
+      Database__Username: ${POSTGRES_USER}
+      Database__Password: ${POSTGRES_PASSWORD}
+      Database__Schema: ${RATE_DATABASE_SCHEMA}
+      Jwt__Key: ${JWT_KEY}
+      ElasticConfiguration__Uri: http://${ELASTIC_HOST}:${ELASTIC_HTTP_PORT}
+
+  posts-service:
+    image: ghcr.io/w1ngshot/trashgrounds-post:1.0.0
+    container_name: ${POST_SERVICE_HOST}
+    restart: unless-stopped
+    ports:
+      - ${POST_SERVICE_HTTP_LOCAL_PORT}:${POST_SERVICE_HTTP_PORT}
+      - ${POST_SERVICE_HTTP2_LOCAL_PORT}:${POST_SERVICE_HTTP2_PORT}
+    depends_on:
+      tg-db:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:${POST_SERVICE_HTTP_PORT};http://+:${POST_SERVICE_HTTP2_PORT}
+      ASPNETCORE_Kestrel__Endpoints__Http__Url: http://+:${POST_SERVICE_HTTP_PORT}
+      ASPNETCORE_Kestrel__Endpoints__Http__Protocols: Http1AndHttp2
+      ASPNETCORE_Kestrel__Endpoints__Http2__Url: http://+:${POST_SERVICE_HTTP2_PORT}
+      ASPNETCORE_Kestrel__Endpoints__Http2__Protocols: Http2
+      Database__Host: ${POSTGRES_HOST}
+      Database__Port: ${POSTGRES_PORT}
+      Database__Database: ${POSTGRES_DB}
+      Database__Username: ${POSTGRES_USER}
+      Database__Password: ${POSTGRES_PASSWORD}
+      Database__Schema: ${POST_DATABASE_SCHEMA}
+      Jwt__Key: ${JWT_KEY}
+      Microservices__Rate: http://${RATE_SERVICE_HOST}:${RATE_SERVICE_HTTP2_PORT}
+      Microservices__File: http://${FILE_SERVICE_HOST}:${FILE_SERVICE_HTTP2_PORT}
+      ElasticConfiguration__Uri: http://${ELASTIC_HOST}:${ELASTIC_HTTP_PORT}
+
+  comments-service:
+    image: ghcr.io/w1ngshot/trashgrounds-comment:1.0.0
+    container_name: ${COMMENT_SERVICE_HOST}
+    restart: unless-stopped
+    ports:
+      - ${COMMENT_SERVICE_HTTP_LOCAL_PORT}:${COMMENT_SERVICE_HTTP_PORT}
+    depends_on:
+      tg-db:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:${COMMENT_SERVICE_HTTP_PORT}
+      Database__Host: ${POSTGRES_HOST}
+      Database__Port: ${POSTGRES_PORT}
+      Database__Database: ${POSTGRES_DB}
+      Database__Username: ${POSTGRES_USER}
+      Database__Password: ${POSTGRES_PASSWORD}
+      Database__Schema: ${COMMENT_DATABASE_SCHEMA}
+      Jwt__Key: ${JWT_KEY}
+      Microservices__User: http://${USER_SERVICE_HOST}:${USER_SERVICE_HTTP2_PORT}
+      ElasticConfiguration__Uri: http://${ELASTIC_HOST}:${ELASTIC_HTTP_PORT}
+
+  files-service:
+    image: ghcr.io/w1ngshot/trashgrounds-file:1.0.0
+    container_name: ${FILE_SERVICE_HOST}
+    restart: unless-stopped
+    ports:
+      - ${FILE_SERVICE_HTTP_LOCAL_PORT}:${FILE_SERVICE_HTTP_PORT}
+      - ${FILE_SERVICE_HTTP2_LOCAL_PORT}:${FILE_SERVICE_HTTP2_PORT}
+    depends_on:
+      tg-db:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:${FILE_SERVICE_HTTP_PORT};http://+:${FILE_SERVICE_HTTP2_PORT}
+      ASPNETCORE_Kestrel__Endpoints__Http__Url: http://+:${FILE_SERVICE_HTTP_PORT}
+      ASPNETCORE_Kestrel__Endpoints__Http__Protocols: Http1AndHttp2
+      ASPNETCORE_Kestrel__Endpoints__Http2__Url: http://+:${FILE_SERVICE_HTTP2_PORT}
+      ASPNETCORE_Kestrel__Endpoints__Http2__Protocols: Http2
+      Database__Host: ${POSTGRES_HOST}
+      Database__Port: ${POSTGRES_PORT}
+      Database__Database: ${POSTGRES_DB}
+      Database__Username: ${POSTGRES_USER}
+      Database__Password: ${POSTGRES_PASSWORD}
+      Database__Schema: ${FILE_DATABASE_SCHEMA}
+      Database__HangfireSchema: ${FILE_HANGFIRE_SCHEMA}
+      Jwt__Key: ${JWT_KEY}
+      UsedFiles__User: http://${USER_SERVICE_HOST}:${USER_SERVICE_HTTP2_PORT}
+      UsedFiles__Post: http://${POST_SERVICE_HOST}:${POST_SERVICE_HTTP2_PORT}
+      UsedFiles__Track: http://${TRACK_SERVICE_HOST}:${TRACK_SERVICE_HTTP2_PORT}
+      ElasticConfiguration__Uri: http://${ELASTIC_HOST}:${ELASTIC_HTTP_PORT}
+    volumes:
+      - tg-images:/app/Files/Images
+      - tg-music:/app/Files/Music
+
+  gateway:
+    image: ghcr.io/w1ngshot/trashgrounds-gateway:1.0.0
+    container_name: ${GATEWAY_HOST}
+    restart: unless-stopped
+    ports:
+      - ${GATEWAY_HTTPS_LOCAL_PORT}:${GATEWAY_HTTPS_PORT}
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: https://+:${GATEWAY_HTTPS_PORT}
+  
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+    container_name: ${ELASTIC_HOST}
+    environment:
+      - discovery.type=single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - ${ELASTIC_HTTP_LOCAL_PORT}:${ELASTIC_HTTP_PORT}
+    volumes:
+      - ./data/elasticsearch:/usr/share/elasticsearch/data
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.10.2
+    container_name: ${KIBANA_HOST}
+    ports:
+      - ${KIBANA_HTTP_LOCAL_PORT}:${KIBANA_HTTP_PORT}
+    environment:
+      - ELASTICSEARCH_URL=http://${ELASTIC_HOST}:${ELASTIC_HTTP_PORT}
+      - ELASTICSEARCH_HOSTS=http://${ELASTIC_HOST}:${ELASTIC_HTTP_PORT}
+    depends_on:
+      - elasticsearch
+
+volumes:
+  tg-images:
+    name: tg-images
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./images
+  tg-music:
+    name: tg-music
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./music
