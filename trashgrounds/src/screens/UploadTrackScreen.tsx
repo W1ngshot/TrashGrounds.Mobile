@@ -9,7 +9,7 @@ import { AddTrackRequest } from '../models/requests/addTrackRequest';
 import { FullTrack } from '../models/fullTrack';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../Navigation';
+import { RootStackParamList } from '../navigation/Navigation';
 
 type TrackScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Track'>;
 

@@ -4,8 +4,8 @@ import { useNavigation } from '@react-navigation/native';
 import { getTrackListByCategory } from '../api/trackApi';
 import { FullTrackInfo } from '../models/fullTrackInfo';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../Navigation';
-import { getImageUrl } from '../utility/fileLink';
+import { RootStackParamList } from '../navigation/Navigation';
+import { getDefaultImageUrl, getImageUrl } from '../utility/fileLink';
 
 const categories = ['New', 'Popular', 'MostStreaming'];
 
@@ -58,7 +58,7 @@ export default function HomeScreen() {
                       source={{
                         uri: item.trackInfo?.pictureId
                           ? getImageUrl(item.trackInfo?.pictureId)
-                          : 'https://example.com/default-image.jpg',
+                          : getDefaultImageUrl(),
                       }}
                       style={styles.trackImage}
                     />

@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, Button } fr
 import { useNavigation } from '@react-navigation/native';
 import { getTrackComments, addTrackComment } from '../api/commentApi';
 import { FullComment } from '../models/fullComment';
-import { getImageUrl } from '../utility/fileLink';
+import { getDefaultImageUrl, getImageUrl } from '../utility/fileLink';
 
 interface CommentsSectionProps {
   trackId: string;
@@ -55,7 +55,7 @@ export default function CommentsSection({ trackId }: CommentsSectionProps) {
         <View key={comment.comment?.id} style={styles.commentContainer}>
           <TouchableOpacity onPress={() => navigation.navigate('UserProfile', { userId: comment.userInfo?.id })}>
             <Image
-              source={{ uri: comment.userInfo?.avatarId ? getImageUrl(comment.userInfo.avatarId) : 'https://example.com/default-avatar.jpg' }}
+              source={{ uri: comment.userInfo?.avatarId ? getImageUrl(comment.userInfo.avatarId) : getDefaultImageUrl() }}
               style={styles.userAvatar}
             />
           </TouchableOpacity>

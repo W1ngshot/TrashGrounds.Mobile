@@ -3,7 +3,7 @@ import { View, Text, Image, StyleSheet, ActivityIndicator } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useRoute } from '@react-navigation/native';
 import { getUserProfile } from '../api/userApi';
-import { getImageUrl } from '../utility/fileLink';
+import { getDefaultImageUrl, getImageUrl } from '../utility/fileLink';
 import UserTracks from '../components/UserTracks';
 import UserPosts from '../components/UserPosts';
 import { UserProfile } from '../models/userProfile';
@@ -40,7 +40,7 @@ export default function UserProfileScreen() {
         <>
           <Image
             source={{
-              uri: profile.avatarId ? getImageUrl(profile.avatarId) : 'https://example.com/default-avatar.jpg',
+              uri: profile.avatarId ? getImageUrl(profile.avatarId) : getDefaultImageUrl(),
             }}
             style={styles.avatar}
           />

@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import { registerUser } from '../api/authApi';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../navigation/Navigation';
+import { useNavigation } from '@react-navigation/native';
+
+
+type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Main'>;
 
 export default function RegisterScreen() {
+  const navigation = useNavigation<NavigationProp>();
 
   const [email, setEmail] = useState('');
   const [nickname, setNickname] = useState('');
@@ -13,6 +20,10 @@ export default function RegisterScreen() {
     try {
       await registerUser(email, nickname, password);
       setMessage('Registration success');
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Main' }],
+      });
     } catch (error: unknown) {
       if (error instanceof Error) {
         setMessage(`Error: ${error.message}`);

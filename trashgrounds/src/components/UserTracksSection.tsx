@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { FullTrackInfo } from '../models/fullTrackInfo';
 import { FullTrack } from '../models/fullTrack';
 import { getTrackListFromUser } from '../api/trackApi';
-import { getImageUrl } from '../utility/fileLink';
+import { getDefaultImageUrl, getImageUrl } from '../utility/fileLink';
 
 interface UserTracksSectionProps {
   fullTrack: FullTrack;
@@ -46,7 +46,7 @@ function UserTracksSection({ fullTrack }: UserTracksSectionProps) {
               source={{
                 uri: item.trackInfo?.pictureId
                   ? getImageUrl(item.trackInfo?.pictureId)
-                  : 'https://example.com/default-image.jpg',
+                  : getDefaultImageUrl(),
               }}
               style={styles.trackImage}
             />

@@ -1,0 +1,1032 @@
+{
+	"info": {
+		"_postman_id": "a1274ac4-0c21-4cfb-b6dd-fb18532ab3b6",
+		"name": "TrashGrounds Docker",
+		"description": "Postman Requests for /Docker/tg_build/docker-compose.yml\n\n[https://github.com/W1ngshot/TrashGrounds.Microservices](https://github.com/W1ngshot/TrashGrounds.Microservices)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23141151"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Email\": \"test@mail.ru\",\r\n    \"Nickname\": \"Testname\",\r\n    \"Password\": \"TestPassword1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Email\": \"test@mail.ru\",\r\n    \"Password\": \"NewPassword1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RefreshTokens",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiVXNlciIsIm5hbWVpZCI6IjM0ZTYxMjI3LTI2MzktNDY1OC1hMDgwLTVlMzc4OTYzNDI0MCIsIm5iZiI6MTcxMDAxMTMzMCwiZXhwIjoxNzEwMDExOTMwLCJpYXQiOjE3MTAwMTEzMzB9.-COjbLSczoiNkPmhv2ljHDDFa4_7Gc8iGZDkj1e6JJI\",\r\n    \"RefreshToken\": \"rKm6lqw/wb40PuXhI5LDiB5IUGmQcw8Lj2StmWacGt8=\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/refresh",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CurrentId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/auth/current-id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"current-id"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ChangePassword",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"OldPassword\": \"TestPassword1234\",\r\n    \"NewPassword\": \"NewPassword1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/change-password",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"change-password"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "File",
+			"item": [
+				{
+					"name": "UploadImage",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/User/Desktop/1.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/image/upload",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"image",
+								"upload"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetImage",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/image/0812b3c5-f7fe-4656-9a18-4dc962df1c75",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"image",
+								"0812b3c5-f7fe-4656-9a18-4dc962df1c75"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UploadMusic",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/User/Desktop/остальное/для гачи пака/2 раунд/Oh, that hurts/Caravan palace- Lone Digger.mp3"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/music/upload",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"music",
+								"upload"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetMusic",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/music/e9d5598a-fbe6-4cc0-a596-2fe4b2dca68a",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"music",
+								"e9d5598a-fbe6-4cc0-a596-2fe4b2dca68a"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "ChangeAvatar",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"NewAvatarId\": \"0812b3c5-f7fe-4656-9a18-4dc962df1c75\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/user/avatar",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"avatar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ChangeStatus",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"NewStatus\": \"My new status\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/user/status",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "MyProfile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/user/profile/my",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"profile",
+								"my"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/user/profile/c314cc61-97ea-4e52-a08c-4f746e81b761",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"profile",
+								"c314cc61-97ea-4e52-a08c-4f746e81b761"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Track",
+			"item": [
+				{
+					"name": "GetAllGenres",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/genres/all",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"genres",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddTrack",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Title\": \"Sample title\",\r\n    \"Description\": \"Sample description\",\r\n    \"IsExplicit\": true,\r\n    \"PictureId\": \"0812b3c5-f7fe-4656-9a18-4dc962df1c75\",\r\n    \"MusicId\": \"e9d5598a-fbe6-4cc0-a596-2fe4b2dca68a\",\r\n    \"Genres\": [\r\n        \"251ceebe-752a-4ea4-810e-03b8eaee7e5f\",\r\n        \"d4b7bc34-3b01-4247-a9bc-02d4c5185e08\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/track/add",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"track",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetTrack",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/track/116b4123-4664-42f9-9541-ee0fc280915c",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"track",
+								"116b4123-4664-42f9-9541-ee0fc280915c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateTrack",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Title\": \"Updated title\",\r\n    \"Description\": \"Updated description\",\r\n    \"IsExplicit\": true,\r\n    \"Genres\": [\r\n        \"d4b7bc34-3b01-4247-a9bc-02d4c5185e08\"\r\n    ],\r\n    \"NewPictureId\": \"0812b3c5-f7fe-4656-9a18-4dc962df1c75\",\r\n    \"NewMusicId\": null,\r\n    \"ChangePicture\": true,\r\n    \"ChangeMusic\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/track/116b4123-4664-42f9-9541-ee0fc280915c",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"track",
+								"116b4123-4664-42f9-9541-ee0fc280915c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteTrack",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/track/116b4123-4664-42f9-9541-ee0fc280915c",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"track",
+								"116b4123-4664-42f9-9541-ee0fc280915c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddListen",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/track/116b4123-4664-42f9-9541-ee0fc280915c/add-listen",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"track",
+								"116b4123-4664-42f9-9541-ee0fc280915c",
+								"add-listen"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetTrackByCategory",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/track/New?take=10&skip=0",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"track",
+								"New"
+							],
+							"query": [
+								{
+									"key": "take",
+									"value": "10"
+								},
+								{
+									"key": "skip",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetTracksFromUser",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/track/from-user/c314cc61-97ea-4e52-a08c-4f746e81b761?take=5&excludeTrackId=d85ff9f5-11ea-4c09-8823-31e763aebd49&skip=0",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"track",
+								"from-user",
+								"c314cc61-97ea-4e52-a08c-4f746e81b761"
+							],
+							"query": [
+								{
+									"key": "take",
+									"value": "5"
+								},
+								{
+									"key": "excludeTrackId",
+									"value": "d85ff9f5-11ea-4c09-8823-31e763aebd49"
+								},
+								{
+									"key": "skip",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SearchTracks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/track/search?query=a&dto=null&take=10&skip=0",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"track",
+								"search"
+							],
+							"query": [
+								{
+									"key": "query",
+									"value": "a"
+								},
+								{
+									"key": "dto",
+									"value": "null"
+								},
+								{
+									"key": "take",
+									"value": "10"
+								},
+								{
+									"key": "skip",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Post",
+			"item": [
+				{
+					"name": "AddPost",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Text\": \"Some placeholder post text\",\r\n    \"AssetId\": null,\r\n    \"IsHidden\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/posts/add",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"posts",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdatePost",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Text\": \"Updated post text\",\r\n    \"AssetId\": \"527b9d81-f5ea-4a08-98d7-c60ffe7ba8d9\",\r\n    \"IsHidden\": false,\r\n    \"ChangeAsset\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/posts/55dddea6-a9b3-4a1d-811c-891b71dd2210",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"posts",
+								"55dddea6-a9b3-4a1d-811c-891b71dd2210"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeletePost",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/posts/003a3045-f412-4e63-8dd3-04536278ad3c",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"posts",
+								"003a3045-f412-4e63-8dd3-04536278ad3c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetMyPosts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/posts/my?take=10&skip=0",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"posts",
+								"my"
+							],
+							"query": [
+								{
+									"key": "take",
+									"value": "10"
+								},
+								{
+									"key": "skip",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetUserPosts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/posts/from-user/34e61227-2639-4658-a080-5e3789634240?take=10&skip=0",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"posts",
+								"from-user",
+								"34e61227-2639-4658-a080-5e3789634240"
+							],
+							"query": [
+								{
+									"key": "take",
+									"value": "10"
+								},
+								{
+									"key": "skip",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Comment",
+			"item": [
+				{
+					"name": "GetTrackComments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/comments/track/116b4123-4664-42f9-9541-ee0fc280915c?take=10&skip=0",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"comments",
+								"track",
+								"116b4123-4664-42f9-9541-ee0fc280915c"
+							],
+							"query": [
+								{
+									"key": "take",
+									"value": "10"
+								},
+								{
+									"key": "skip",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddComment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Message\": \"Some comment message\",\r\n    \"ReplyTo\": null\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/comments/add/track/116b4123-4664-42f9-9541-ee0fc280915c",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"comments",
+								"add",
+								"track",
+								"116b4123-4664-42f9-9541-ee0fc280915c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateComment",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Message\": \"Updated comment message\",\r\n    \"ReplyTo\": null\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/track/116b4123-4664-42f9-9541-ee0fc280915c/comments/59b97165-e7b8-4ece-a4df-b94f58804368",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"track",
+								"116b4123-4664-42f9-9541-ee0fc280915c",
+								"comments",
+								"59b97165-e7b8-4ece-a4df-b94f58804368"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteComment",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/track/116b4123-4664-42f9-9541-ee0fc280915c/comments/59b97165-e7b8-4ece-a4df-b94f58804368",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"track",
+								"116b4123-4664-42f9-9541-ee0fc280915c",
+								"comments",
+								"59b97165-e7b8-4ece-a4df-b94f58804368"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Rate",
+			"item": [
+				{
+					"name": "Post",
+					"item": [
+						{
+							"name": "GetPostUserRate",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/rate/post/55dddea6-a9b3-4a1d-811c-891b71dd2210",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"rate",
+										"post",
+										"55dddea6-a9b3-4a1d-811c-891b71dd2210"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetPostsUserRates",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/rate/from-posts?PostsId=55dddea6-a9b3-4a1d-811c-891b71dd2210&PostsId=7326d483-93a2-4043-9cac-bbb5e344ed52&PostsId=b3be2c51-4bdf-43a5-9b18-e12216f555d8",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"rate",
+										"from-posts"
+									],
+									"query": [
+										{
+											"key": "PostsId",
+											"value": "55dddea6-a9b3-4a1d-811c-891b71dd2210"
+										},
+										{
+											"key": "PostsId",
+											"value": "7326d483-93a2-4043-9cac-bbb5e344ed52"
+										},
+										{
+											"key": "PostsId",
+											"value": "b3be2c51-4bdf-43a5-9b18-e12216f555d8"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ChangePostRate",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"NewRate\": 1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/rate/post/55dddea6-a9b3-4a1d-811c-891b71dd2210",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"rate",
+										"post",
+										"55dddea6-a9b3-4a1d-811c-891b71dd2210"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeletePostRate",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/rate/post/55dddea6-a9b3-4a1d-811c-891b71dd2210",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"rate",
+										"post",
+										"55dddea6-a9b3-4a1d-811c-891b71dd2210"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Track",
+					"item": [
+						{
+							"name": "GetTrackUserRate",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/rate/track/116b4123-4664-42f9-9541-ee0fc280915c",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"rate",
+										"track",
+										"116b4123-4664-42f9-9541-ee0fc280915c"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "RateTrack",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"NewRate\": 4\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/rate/track/116b4123-4664-42f9-9541-ee0fc280915c",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"rate",
+										"track",
+										"116b4123-4664-42f9-9541-ee0fc280915c"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeleteTrackRate",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/rate/track/116b4123-4664-42f9-9541-ee0fc280915c",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"rate",
+										"track",
+										"116b4123-4664-42f9-9541-ee0fc280915c"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "access_token",
+			"value": "token",
+			"type": "string"
+		}
+	]
+}

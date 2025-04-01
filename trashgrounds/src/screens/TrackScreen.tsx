@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, StyleSheet, ScrollView } from 'react-native';
+import { Text, StyleSheet, ScrollView, View } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { getTrackDetails } from '../api/trackApi';
 import { FullTrack } from '../models/fullTrack';
@@ -7,6 +7,7 @@ import CommentsSection from '../components/CommentSection';
 import UserTracksSection from '../components/UserTracksSection';
 import UserInfoSection from '../components/UserInfoSection';
 import TrackInfoSection from '../components/TrackInfoSection';
+import TrackRatingSection from '../components/TrackRatingSection';
 
 export default function TrackScreen() {
   const [track, setTrack] = useState<FullTrack | null>(null);
@@ -34,7 +35,11 @@ export default function TrackScreen() {
 
       {track.userInfo && <UserInfoSection userInfo={track.userInfo} />}
 
-      {track.rate && <Text style={styles.rating}>Rating: {track.rate.rating}</Text>}
+      {track.rate && (
+        <View style={styles.ratingContainer}>
+          <TrackRatingSection trackId={trackId} averageRating={track.rate.rating} />
+        </View>
+      )}
 
       <UserTracksSection fullTrack={track} />
 
@@ -47,8 +52,8 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
   },
-  rating: {
-    marginTop: 10,
-    fontSize: 16,
+  ratingContainer: {
+    marginTop: 15,
+    alignItems: 'center',
   },
 });

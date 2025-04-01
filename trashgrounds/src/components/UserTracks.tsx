@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, ActivityIndicator, TouchableOpacity, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { getTrackListFromUser } from '../api/trackApi';
-import { getImageUrl } from '../utility/fileLink';
+import { getDefaultImageUrl, getImageUrl } from '../utility/fileLink';
 import { FullTrackInfo } from '../models/fullTrackInfo';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../Navigation';
+import { RootStackParamList } from '../navigation/Navigation';
 
 interface UserTracksProps {
   userId: string;
@@ -51,7 +51,7 @@ export default function UserTracks({ userId }: UserTracksProps) {
             source={{
               uri: track.trackInfo?.pictureId
                 ? getImageUrl(track.trackInfo.pictureId)
-                : 'https://example.com/default-image.jpg',
+                : getDefaultImageUrl(),
             }}
             style={styles.trackImage}
           />

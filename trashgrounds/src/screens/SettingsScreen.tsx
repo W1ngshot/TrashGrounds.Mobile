@@ -1,12 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, StyleSheet, TextInput, Image } from 'react-native';
+import { View, Text, Button, StyleSheet, TextInput, Image, ScrollView } from 'react-native';
 import { getCurrentUserProfile, updateUserStatus, updateUserAvatar } from '../api/userApi';
 import { changePassword } from '../api/authApi';
 import { UserProfile } from '../models/userProfile';
 import ImageUpload from '../components/ImageUpload';
-import { getImageUrl } from '../utility/fileLink';
+import { getDefaultImageUrl, getImageUrl } from '../utility/fileLink';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../navigation/Navigation';
+import { useNavigation } from '@react-navigation/native';
+
+
+type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Main'>;
 
 export default function ProfileScreen() {
+  const navigation = useNavigation<NavigationProp>();
+
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [message, setMessage] = useState('');
   const [newStatus, setNewStatus] = useState('');
@@ -71,13 +80,25 @@ export default function ProfileScreen() {
     setMessage(message);
   };
 
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.multiRemove(['accessToken', 'refreshToken', 'userId']);
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Main' }],
+      });
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
+
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       {profile && (
         <View>
           <Image
             source={{
-              uri: profile.avatarId ? getImageUrl(profile.avatarId) : 'https://example.com/default-avatar.jpg',
+              uri: profile.avatarId ? getImageUrl(profile.avatarId) : getDefaultImageUrl(),
             }}
             style={styles.userAvatar}
           />
@@ -129,7 +150,12 @@ export default function ProfileScreen() {
       </View>
 
       {message ? <Text style={styles.message}>{message}</Text> : null}
-    </View>
+
+      <View style={styles.container}>
+        <Text style={styles.title}>Settings</Text>
+        <Button title="Logout" onPress={handleLogout} color="red" />
+      </View>
+    </ScrollView>
   );
 }
 
@@ -141,4 +167,5 @@ const styles = StyleSheet.create({
   passwordSection: { marginTop: 30 },
   sectionTitle: { fontSize: 20, fontWeight: 'bold', marginBottom: 10 },
   userAvatar: { width: 250, height: 250, marginRight: 10, },
+  title: { fontSize: 20, marginBottom: 20, },
 });

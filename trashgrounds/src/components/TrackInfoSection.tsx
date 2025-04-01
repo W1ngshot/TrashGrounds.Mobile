@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { MusicTrack } from '../models/musicTrack';
-import { getImageUrl } from '../utility/fileLink';
+import { getDefaultImageUrl, getImageUrl } from '../utility/fileLink';
 
 interface TrackInfoSectionProps {
   track: MusicTrack;
@@ -12,7 +12,7 @@ function TrackInfoSection({ track }: TrackInfoSectionProps) {
     <View style={styles.container}>
       <Image
         source={{
-          uri: track.pictureId ? getImageUrl(track.pictureId) : 'https://example.com/default-image.jpg',
+          uri: track.pictureId ? getImageUrl(track.pictureId) : getDefaultImageUrl(),
         }}
         style={styles.trackImage}
       />

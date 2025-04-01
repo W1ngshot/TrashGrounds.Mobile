@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { UserInformation } from '../models/userInformation';
-import { getImageUrl } from '../utility/fileLink';
+import { getDefaultImageUrl, getImageUrl } from '../utility/fileLink';
 
 interface UserInfoSectionProps {
   userInfo: UserInformation;
@@ -16,7 +16,7 @@ function UserInfoSection({ userInfo }: UserInfoSectionProps) {
       <View style={styles.userInfoContainer}>
         <Image
           source={{
-            uri: userInfo.avatarId ? getImageUrl(userInfo.avatarId) : 'https://example.com/default-avatar.jpg',
+            uri: userInfo.avatarId ? getImageUrl(userInfo.avatarId) : getDefaultImageUrl(),
           }}
           style={styles.userAvatar}
         />
