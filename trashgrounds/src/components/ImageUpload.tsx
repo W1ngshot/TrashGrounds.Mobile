@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Button, View, Text } from 'react-native';
+import { Button, View, Text, Image } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 import { uploadImage } from '../api/fileApi';
 
 interface ImageUploadProps {
@@ -9,18 +10,35 @@ interface ImageUploadProps {
 
 const ImageUpload: React.FC<ImageUploadProps> = ({ onSuccess, onError }) => {
   const [uploading, setUploading] = useState<boolean>(false);
-  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageFile, setImageFile] = useState<ImagePicker.ImagePickerAsset | null>(null);
 
-  const handleFileChange = (event: any) => {
-    const file = event.target.files[0];
-    setImageFile(file);
+  const handleFilePick = async () => {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        quality: 1,
+      });
+
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        setImageFile(result.assets[0]);
+      }
+    } catch (error) {
+      onError('Failed to pick image');
+    }
   };
 
   const handleUpload = async () => {
     if (imageFile) {
       setUploading(true);
       try {
-        const pictureId = await uploadImage(imageFile);
+        const fileToSend = {
+          uri: imageFile.uri,
+          name: imageFile.fileName || 'photo.jpg',
+          type: imageFile.type || 'image/jpeg',
+        };
+
+        const pictureId = await uploadImage(fileToSend); // Передаем объект с uri, name, type
         onSuccess(pictureId);
       } catch (error) {
         onError('Error uploading image');
@@ -34,8 +52,14 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onSuccess, onError }) => {
 
   return (
     <View>
-      <input type="file" accept="image/*" onChange={handleFileChange} />
-      <Button title="Upload Image" onPress={handleUpload} disabled={uploading} />
+      <Button title="Choose Image" onPress={handleFilePick} />
+      {imageFile && (
+        <View style={{ alignItems: 'center', marginVertical: 10 }}>
+          <Image source={{ uri: imageFile.uri }} style={{ width: 200, height: 200 }} />
+          <Text>Selected Image</Text>
+        </View>
+      )}
+      <Button title="Upload Image" onPress={handleUpload} disabled={uploading || !imageFile} />
       {uploading && <Text>Uploading image...</Text>}
     </View>
   );
