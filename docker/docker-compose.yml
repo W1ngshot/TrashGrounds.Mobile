@@ -45,7 +45,7 @@ services:
       ElasticConfiguration__Uri: http://${ELASTIC_HOST}:${ELASTIC_HTTP_PORT}
 
   tracks-service:
-    image: ghcr.io/w1ngshot/trashgrounds-track:1.0.5
+    image: ghcr.io/w1ngshot/trashgrounds-track:1.0.7
     container_name: ${TRACK_SERVICE_HOST}
     restart: unless-stopped
     ports:
@@ -150,7 +150,7 @@ services:
       ElasticConfiguration__Uri: http://${ELASTIC_HOST}:${ELASTIC_HTTP_PORT}
 
   files-service:
-    image: ghcr.io/w1ngshot/trashgrounds-file:1.0.0
+    image: ghcr.io/w1ngshot/trashgrounds-file:1.0.7
     container_name: ${FILE_SERVICE_HOST}
     restart: unless-stopped
     ports:
@@ -183,7 +183,7 @@ services:
       - tg-music:/app/Files/Music
 
   gateway:
-    image: ghcr.io/w1ngshot/trashgrounds-gateway:1.0.4
+    image: ghcr.io/w1ngshot/trashgrounds-gateway:1.0.7
     container_name: ${GATEWAY_HOST}
     restart: unless-stopped
     ports:
