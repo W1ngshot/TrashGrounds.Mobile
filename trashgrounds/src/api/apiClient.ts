@@ -1,9 +1,25 @@
 import axios, { AxiosInstance, AxiosError, AxiosRequestConfig } from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Platform } from 'react-native';
+import * as Device from 'expo-device';
+import { NON_EMULATED_ANDROID_API_URL } from '../config';
+
+const getBaseUrl = () => {
+  if (Platform.OS === 'android') {
+    if (!Device.isDevice) {
+      return 'http://10.0.2.2:8000';
+    } else {
+      return NON_EMULATED_ANDROID_API_URL;
+    }
+  } else if (Platform.OS === 'ios') {
+    return 'http://localhost:8000';
+  }
+  return 'http://localhost:8000';
+}
 
 const apiClient: AxiosInstance = axios.create({
-  baseURL: 'http://localhost:8000',
-  timeout: 5000,
+  baseURL: getBaseUrl(),
+  timeout: 20000,
   headers: {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
