@@ -259,6 +259,8 @@ const styles = StyleSheet.create({
   avatarContainer: {
     position: 'relative',
     marginBottom: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   userAvatar: {
     width: 120,
