@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import { registerUser } from '../api/authApi';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/Navigation';
 import { useNavigation } from '@react-navigation/native';
-
+import { Ionicons } from '@expo/vector-icons';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Main'>;
 
@@ -14,9 +14,12 @@ export default function RegisterScreen() {
   const [email, setEmail] = useState('');
   const [nickname, setNickname] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleRegister = async () => {
+    setIsLoading(true);
     try {
       await registerUser(email, nickname, password);
       setMessage('Registration success');
@@ -30,24 +33,184 @@ export default function RegisterScreen() {
       } else {
         setMessage('An unknown error occurred');
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>Register</Text>
-      <TextInput placeholder="Email" value={email} onChangeText={setEmail} style={styles.input} />
-      <TextInput placeholder="Nickname" value={nickname} onChangeText={setNickname} style={styles.input} />
-      <TextInput placeholder="Password" value={password} onChangeText={setPassword} secureTextEntry style={styles.input} />
-      <Button title="Register" onPress={handleRegister} />
-      {message ? <Text style={styles.message}>{message}</Text> : null}
-    </View>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}
+    >
+      <View style={styles.innerContainer}>
+        <Text style={styles.title}>Create Account</Text>
+        <Text style={styles.subtitle}>Join us to get started</Text>
+
+        <View style={styles.form}>
+          <TextInput
+            placeholder="Email"
+            placeholderTextColor="#999"
+            value={email}
+            onChangeText={setEmail}
+            style={styles.input}
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+          
+          <TextInput
+            placeholder="Nickname"
+            placeholderTextColor="#999"
+            value={nickname}
+            onChangeText={setNickname}
+            style={styles.input}
+            autoCapitalize="none"
+          />
+          
+          <View style={styles.passwordContainer}>
+            <TextInput
+              placeholder="Password"
+              placeholderTextColor="#999"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={!showPassword}
+              style={[styles.input, styles.passwordInput]}
+            />
+            <TouchableOpacity 
+              style={styles.eyeIcon}
+              onPress={toggleShowPassword}
+            >
+              <Ionicons 
+                name={showPassword ? 'eye-off' : 'eye'} 
+                size={24} 
+                color="#666" 
+              />
+            </TouchableOpacity>
+          </View>
+          
+          <TouchableOpacity 
+            style={[styles.button, isLoading && styles.buttonDisabled]}
+            onPress={handleRegister}
+            disabled={isLoading}
+          >
+            <Text style={styles.buttonText}>
+              {isLoading ? 'Creating Account...' : 'Create Account'}
+            </Text>
+          </TouchableOpacity>
+          
+          {message ? (
+            <Text style={message.includes('Error') ? styles.errorMessage : styles.successMessage}>
+              {message}
+            </Text>
+          ) : null}
+        </View>
+        
+        <View style={styles.footer}>
+          <Text style={styles.footerText}>Already have an account?</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+            <Text style={styles.footerLink}>Sign In</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 20 },
-  label: { fontSize: 18, fontWeight: 'bold' },
-  input: { borderWidth: 1, padding: 10, marginVertical: 5 },
-  message: { marginTop: 10, color: 'green' },
+  container: {
+    flex: 1,
+    backgroundColor: '#f8f9fa',
+  },
+  innerContainer: {
+    flex: 1,
+    padding: 32,
+    justifyContent: 'center',
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#333',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+    marginBottom: 32,
+  },
+  form: {
+    marginBottom: 24,
+  },
+  input: {
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    padding: 16,
+    marginBottom: 16,
+    fontSize: 16,
+    color: '#333',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  passwordContainer: {
+    position: 'relative',
+  },
+  passwordInput: {
+    paddingRight: 50,
+  },
+  eyeIcon: {
+    position: 'absolute',
+    right: 15,
+    top: 15,
+  },
+  button: {
+    backgroundColor: '#4a6bff',
+    borderRadius: 8,
+    padding: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 8,
+  },
+  buttonDisabled: {
+    backgroundColor: '#a0a0a0',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 24,
+  },
+  footerText: {
+    color: '#666',
+    marginRight: 4,
+  },
+  footerLink: {
+    color: '#4a6bff',
+    fontWeight: '600',
+  },
+  successMessage: {
+    color: '#28a745',
+    textAlign: 'center',
+    marginTop: 16,
+    fontSize: 14,
+  },
+  errorMessage: {
+    color: '#dc3545',
+    textAlign: 'center',
+    marginTop: 16,
+    fontSize: 14,
+  },
 });

@@ -43,7 +43,24 @@ Once the backend is up and running, you can start the Expo mobile app:
    npm install
    ```
 
-3. Start the Expo app using the following command:
+3. ❗❗ **IMPORTANT: for real Android device (not an emulator)** ❗❗
+   If you're **running the app on a real Android device (not an emulator)**, you must update your local machine IP address in config file so the device can reach your backend server.
+
+   1. Open the file:  
+   `trashgrounds/src/config.ts`
+   2. Set the value of `NON_EMULATED_ANDROID_API_URL` to your machine's IP address, found by running the following command in your terminal:
+      ```bash
+      ipconfig
+      ```
+   3. For example:
+      ```ts
+      export const NON_EMULATED_ANDROID_API_URL = 'http://192.168.1.100:8000';
+      ```
+
+      This ensures that Axios can connect to your local backend when running on a physical Android device.
+   4. Make sure your phone and computer are on the same Wi-Fi network.
+
+4. Start the Expo app using the following command:
 
    ```bash
    npx expo start

@@ -5,6 +5,8 @@ import { getImageUrl } from '../utility/fileLink';
 import { FullPost } from '../models/fullPost';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getPostsUserRate, ratePost, deleteRatePost } from '../api/rateApi';
+import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface UserPostsProps {
   userId: string;
@@ -22,24 +24,15 @@ export default function UserPosts({ userId }: UserPostsProps) {
         setPosts(postList);
 
         const storedUserId = await AsyncStorage.getItem('userId');
-        if (!storedUserId || postList.length === 0) {
-          return;
-        }
+        if (!storedUserId || postList.length === 0) return;
 
         const postIds = postList.map(post => post.post.id);
-
-        try {
-          const response = await getPostsUserRate(postIds);
-          const newRatings = new Map<string, number | null>();
-          response.postsRate.forEach((rate) => {
-            newRatings.set(rate.postId, rate.rate);
-          });
-          setRatings(newRatings);
-        } catch (error) {
-          console.error('Error fetching user posts:', error);
-        }
-
-
+        const response = await getPostsUserRate(postIds);
+        const newRatings = new Map<string, number | null>();
+        response.postsRate.forEach((rate) => {
+          newRatings.set(rate.postId, rate.rate);
+        });
+        setRatings(newRatings);
       } catch (error) {
         console.error('Error fetching user posts:', error);
       } finally {
@@ -53,7 +46,7 @@ export default function UserPosts({ userId }: UserPostsProps) {
   const handleRate = async (postId: string, rate: number) => {
     try {
       await ratePost(postId, rate);
-      setRatings(prevRatings => new Map(prevRatings).set(postId, rate));
+      setRatings(prev => new Map(prev).set(postId, rate));
     } catch (err) {
       console.error('Failed to update rating');
     }
@@ -62,10 +55,10 @@ export default function UserPosts({ userId }: UserPostsProps) {
   const handleDeleteRate = async (postId: string) => {
     try {
       await deleteRatePost(postId);
-      setRatings(prevRatings => {
-        const updatedRatings = new Map(prevRatings);
-        updatedRatings.delete(postId);
-        return updatedRatings;
+      setRatings(prev => {
+        const updated = new Map(prev);
+        updated.delete(postId);
+        return updated;
       });
     } catch (err) {
       console.error('Failed to delete rating');
@@ -73,15 +66,24 @@ export default function UserPosts({ userId }: UserPostsProps) {
   };
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#0000ff" />;
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#4a6bff" />
+      </View>
+    );
   }
 
   if (posts.length === 0) {
-    return <Text style={styles.noPosts}>No posts available</Text>;
+    return (
+      <View style={styles.emptyContainer}>
+        <Ionicons name="document-text-outline" size={48} color="#ccc" />
+        <Text style={styles.emptyText}>No posts yet</Text>
+      </View>
+    );
   }
 
   return (
-    <ScrollView>
+    <ScrollView contentContainerStyle={styles.container}>
       {posts.map((post) => (
         <View key={post.post.id} style={styles.postCard}>
           {post.post.assetId && (
@@ -90,27 +92,66 @@ export default function UserPosts({ userId }: UserPostsProps) {
               style={styles.postImage}
             />
           )}
-          <View style={styles.postInfo}>
+          
+          <View style={styles.postContent}>
             <Text style={styles.postText}>{post.post.text}</Text>
-            <Text style={styles.postDate}>Published: {new Date(post.post.uploadDate).toLocaleDateString()}</Text>
-            <Text style={styles.postRating}>Rating: {post.rate ?? 0}</Text>
-          </View>
-          <View style={styles.ratingContainer}>
-            <TouchableOpacity
-              onPress={() => ratings.get(post.post.id) === 1 ? handleDeleteRate(post.post.id) : handleRate(post.post.id, 1)}
-              style={[styles.arrowButton, ratings.get(post.post.id) === 1 && styles.selectedArrowUp]}
+            
+            <View style={styles.postMeta}>
+              <Text style={styles.postDate}>
+                <Ionicons name="time-outline" size={14} color="#666" />{' '}
+                {new Date(post.post.uploadDate).toLocaleDateString()}
+              </Text>
+              <Text style={styles.postRating}>
+                <Ionicons name="star" size={14} color="#FFD700" />{' '}
+                {post.rate?.toFixed(1) || '0.0'}
+              </Text>
+            </View>
+            
+            <LinearGradient
+              colors={['#f8f9fa', '#e9ecef']}
+              style={styles.ratingContainer}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
             >
-              <Text style={[styles.arrowText, ratings.get(post.post.id) === 1 && styles.selectedArrowText]}>↑</Text>
-            </TouchableOpacity>
-            <Text style={styles.ratingText}>
-              {ratings.get(post.post.id) === null ? 'No rating' : ratings.get(post.post.id) === 1 ? '1' : ratings.get(post.post.id) === -1 ? '-1' : 'No rating'}
-            </Text>
-            <TouchableOpacity
-              onPress={() => ratings.get(post.post.id) === -1 ? handleDeleteRate(post.post.id) : handleRate(post.post.id, -1)}
-              style={[styles.arrowButton, ratings.get(post.post.id) === -1 && styles.selectedArrowDown]}
-            >
-              <Text style={[styles.arrowText, ratings.get(post.post.id) === -1 && styles.selectedArrowText]}>↓</Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => ratings.get(post.post.id) === 1 ? 
+                  handleDeleteRate(post.post.id) : 
+                  handleRate(post.post.id, 1)}
+                style={[
+                  styles.rateButton, 
+                  styles.likeButton,
+                  ratings.get(post.post.id) === 1 && styles.activeLike
+                ]}
+              >
+                <Ionicons 
+                  name="thumbs-up" 
+                  size={20} 
+                  color={ratings.get(post.post.id) === 1 ? '#fff' : '#4a6bff'} 
+                />
+              </TouchableOpacity>
+              
+              <Text style={styles.ratingValue}>
+                {ratings.get(post.post.id) === 1 ? 'Liked' : 
+                 ratings.get(post.post.id) === -1 ? 'Disliked' : 'Rate'}
+              </Text>
+              
+              <TouchableOpacity
+                onPress={() => ratings.get(post.post.id) === -1 ? 
+                  handleDeleteRate(post.post.id) : 
+                  handleRate(post.post.id, -1)}
+                style={[
+                  styles.rateButton, 
+                  styles.dislikeButton,
+                  ratings.get(post.post.id) === -1 && styles.activeDislike
+                ]}
+              >
+                <Ionicons 
+                  name="thumbs-down" 
+                  size={20} 
+                  color={ratings.get(post.post.id) === -1 ? '#fff' : '#dc3545'} 
+                />
+              </TouchableOpacity>
+            </LinearGradient>
           </View>
         </View>
       ))}
@@ -119,63 +160,92 @@ export default function UserPosts({ userId }: UserPostsProps) {
 }
 
 const styles = StyleSheet.create({
-  noPosts: {
-    textAlign: 'center',
-    fontSize: 16,
-    marginTop: 20,
+  container: {
+    padding: 16,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 40,
+  },
+  emptyText: {
+    fontSize: 18,
+    color: '#999',
+    marginTop: 16,
   },
   postCard: {
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 3,
+    overflow: 'hidden',
   },
   postImage: {
     width: '100%',
     height: 200,
-    borderRadius: 8,
-    marginBottom: 10,
   },
-  postInfo: {
-    paddingHorizontal: 5,
+  postContent: {
+    padding: 16,
   },
   postText: {
     fontSize: 16,
-    marginBottom: 5,
+    lineHeight: 24,
+    color: '#333',
+    marginBottom: 12,
+  },
+  postMeta: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 16,
   },
   postDate: {
+    fontSize: 14,
+    color: '#666',
+  },
+  postRating: {
     fontSize: 14,
     color: '#666',
   },
   ratingContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 10,
+    justifyContent: 'space-between',
+    padding: 12,
+    borderRadius: 8,
   },
-  postRating: {
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  arrowButton: {
+  rateButton: {
     padding: 10,
-    marginHorizontal: 10,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#007BFF',
+    borderRadius: 20,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  selectedArrowUp: {
-    backgroundColor: '#cce5ff', // Light blue background for active "up" arrow
+  likeButton: {
+    backgroundColor: 'rgba(74, 107, 255, 0.1)',
   },
-  selectedArrowDown: {
-    backgroundColor: '#ffcccc', // Light red background for active "down" arrow
+  dislikeButton: {
+    backgroundColor: 'rgba(220, 53, 69, 0.1)',
   },
-  arrowText: {
-    fontSize: 18,
-    color: '#007BFF',
+  activeLike: {
+    backgroundColor: '#4a6bff',
   },
-  selectedArrowText: {
-    color: '#0056b3', // Darker blue for active text
+  activeDislike: {
+    backgroundColor: '#dc3545',
   },
-  ratingText: {
-    fontSize: 16,
+  ratingValue: {
+    fontSize: 14,
+    color: '#666',
+    fontWeight: '500',
   },
 });
